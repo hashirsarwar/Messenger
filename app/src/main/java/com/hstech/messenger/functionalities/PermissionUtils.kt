@@ -3,7 +3,13 @@ package com.hstech.messenger.functionalities
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
+import android.provider.Telephony
 import androidx.core.app.ActivityCompat
+import android.content.Intent
+import android.content.ComponentName
+import com.hstech.messenger.listeners.OldSMSListener
+
 
 class PermissionUtils {
 
@@ -20,7 +26,26 @@ class PermissionUtils {
 
         fun makeDefaultApp(context: Context)
         {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (context.packageName != Telephony.Sms.getDefaultSmsPackage(context)) {
+                    val intent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
+                    intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, context.packageName)
+                    context.startActivity(intent)
+                }
+                disableOldSmsBroadcast(context)
+            }
+        }
 
+        private fun disableOldSmsBroadcast(context: Context)
+        {
+            val receiver = ComponentName(context, OldSMSListener::class.java)
+            val pm = context.packageManager
+
+            pm.setComponentEnabledSetting(
+                receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP
+            )
         }
     }
 }
