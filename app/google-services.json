@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1022286487949",
+    "firebase_url": "https://messenger-c2938.firebaseio.com",
+    "project_id": "messenger-c2938",
+    "storage_bucket": "messenger-c2938.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022286487949:android:aebaa37bf66d5f46",
+        "android_client_info": {
+          "package_name": "com.hstech.messenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022286487949-99d2h11jpmmlom80p49fsqhdreuojgp8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hstech.messenger",
+            "certificate_hash": "73a3e2cf48d5586f2f9b53fdf36ac53793fe0909"
+          }
+        },
+        {
+          "client_id": "1022286487949-kms9qrk98hei2mlmt1ptt8pcc6k8lgsi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnvbGHQASYpsfCzcIXEA0yFnc-p9_sQu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022286487949-kms9qrk98hei2mlmt1ptt8pcc6k8lgsi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
