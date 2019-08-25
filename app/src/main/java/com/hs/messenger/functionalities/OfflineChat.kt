@@ -1,4 +1,4 @@
-package com.hstech.messenger.functionalities
+package com.hs.messenger.functionalities
 
 import android.content.Intent
 import android.database.ContentObserver
@@ -11,9 +11,9 @@ import android.telephony.SmsMessage
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.lang.Exception
-import com.hstech.messenger.models.Message
-import com.hstech.messenger.models.MessageContent
-import com.hstech.messenger.models.MessageTypes
+import com.hs.messenger.models.Message
+import com.hs.messenger.models.MessageContent
+import com.hs.messenger.models.MessageTypes
 
 class OfflineChat : Chat() {
 

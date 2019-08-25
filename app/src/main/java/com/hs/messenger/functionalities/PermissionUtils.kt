@@ -1,4 +1,4 @@
-package com.hstech.messenger.functionalities
+package com.hs.messenger.functionalities
 
 import android.app.Activity
 import android.content.Context
@@ -11,7 +11,7 @@ import android.content.ComponentName
 import android.net.Uri
 import android.os.PowerManager
 import android.provider.Settings
-import com.hstech.messenger.listeners.OldSMSListener
+import com.hs.messenger.listeners.OldSMSListener
 
 //This class should always be called from an activity.
 

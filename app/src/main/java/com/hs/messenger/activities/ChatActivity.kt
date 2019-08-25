@@ -1,8 +1,8 @@
-package com.hstech.messenger.activities
+package com.hs.messenger.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.hstech.messenger.R
+import com.hs.messenger.R
 
 class ChatActivity : AppCompatActivity() {
 

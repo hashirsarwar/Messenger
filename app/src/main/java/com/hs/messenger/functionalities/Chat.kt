@@ -1,10 +1,10 @@
-package com.hstech.messenger.functionalities
+package com.hs.messenger.functionalities
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.hstech.messenger.models.User
+import com.hs.messenger.models.User
 
 abstract class Chat {
 

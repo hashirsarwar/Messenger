@@ -1,4 +1,4 @@
-package com.hstech.messenger.functionalities
+package com.hs.messenger.functionalities
 
 import android.content.Context
 import android.provider.ContactsContract

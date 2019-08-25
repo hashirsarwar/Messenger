@@ -1,4 +1,4 @@
-package com.hstech.messenger.models
+package com.hs.messenger.models
 
 class Message
 {
