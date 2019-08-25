@@ -12,8 +12,8 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
     <application
         android:name=".functionalities.AppUtils"
@@ -27,9 +27,8 @@
 
         <receiver
             android:name=".listeners.StartServiceReceiver"
-            android:enabled="true" >
+            android:enabled="true">
             <intent-filter>
-                <action android:name="com.messenger.startagain" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
@@ -64,23 +63,23 @@
         <!-- <action android:name="android.provider.Telephony.SMS_RECEIVED" /> -->
         <!-- </intent-filter> -->
         <!-- </receiver> -->
-        <!-- <receiver -->
-        <!-- android:name=".listeners.SMSListener" -->
-        <!-- android:enabled="true" -->
-        <!-- android:exported="true" -->
-        <!-- android:permission="android.permission.BROADCAST_SMS"> -->
-        <!-- <intent-filter android:priority="3"> -->
-        <!-- <action android:name="android.provider.Telephony.SMS_RECEIVED" /> &lt;!&ndash;TODO: change to DELIVER&ndash;&gt; -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
-        <!-- <receiver -->
-        <!-- android:name=".listeners.MMSListener" -->
-        <!-- android:permission="android.permission.BROADCAST_WAP_PUSH"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED" /> &lt;!&ndash;TODO: change to DELIVER&ndash;&gt; -->
-        <!-- <data android:mimeType="application/vnd.wap.mms-message" /> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
+         <receiver
+         android:name=".listeners.SMSListener"
+         android:enabled="true"
+         android:exported="true"
+         android:permission="android.permission.BROADCAST_SMS">
+         <intent-filter android:priority="3">
+         <action android:name="android.provider.Telephony.SMS_RECEIVED" /> <!--TODO: change to DELIVER-->
+         </intent-filter>
+         </receiver>
+         <receiver
+         android:name=".listeners.MMSListener"
+         android:permission="android.permission.BROADCAST_WAP_PUSH">
+         <intent-filter>
+         <action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED" /> <!--TODO: change to DELIVER-->
+         <data android:mimeType="application/vnd.wap.mms-message" />
+         </intent-filter>
+         </receiver>
         <!-- <service -->
         <!-- android:name=".HeadlessSmsSendService" -->
         <!-- android:exported="true" -->

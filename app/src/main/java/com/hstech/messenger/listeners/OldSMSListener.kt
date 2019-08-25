@@ -7,6 +7,6 @@ import com.hstech.messenger.functionalities.OfflineChat
 
 class OldSMSListener: BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {
-        OfflineChat.receiveSms(p0, p1)
+        OfflineChat.receiveSms(p1)
     }
 }

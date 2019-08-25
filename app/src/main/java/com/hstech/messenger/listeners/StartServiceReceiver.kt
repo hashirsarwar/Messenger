@@ -7,7 +7,11 @@ import com.hstech.messenger.functionalities.AppUtils
 
 class StartServiceReceiver : BroadcastReceiver() {
 
-    override fun onReceive(context: Context, intent: Intent) {
-        AppUtils.startConnectionNotifier()
+    override fun onReceive(context: Context, intent: Intent)
+    {
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED)
+        {
+            AppUtils.startConnectionNotifier()
+        }
     }
 }

@@ -11,7 +11,7 @@ class AppUtils : Application()
     companion object
     {
         @SuppressLint("StaticFieldLeak")
-        @Volatile private lateinit var context: Context
+        @Volatile lateinit var context: Context
 
         fun startConnectionNotifier()
         {
@@ -22,6 +22,8 @@ class AppUtils : Application()
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+
+        //BELOW IS THE CODE EXECUTED ON THE START OF THE APPLICATION
         startConnectionNotifier()
     }
 }

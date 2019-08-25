@@ -1,8 +1,11 @@
 package com.hstech.messenger.models
 
-class Message(sender: String,
-              time: Long,
-              seenStatus: String,
-              messages: ArrayList<MessageContent>)
+class Message
+{
+    var sender: String? = null
+    var time: Long? = null
+    var messageText: String? = null
+    var messageContent: ArrayList<MessageContent>? = ArrayList()
+}
 
-class MessageContent(messageBody: ByteArray, messageType: String)
+class MessageContent(val messageBody: ByteArray?, val messageType: String?)

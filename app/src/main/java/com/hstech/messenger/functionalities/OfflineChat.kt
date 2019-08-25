@@ -1,118 +1,237 @@
 package com.hstech.messenger.functionalities
 
-import android.content.Context
 import android.content.Intent
 import android.database.ContentObserver
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.telephony.SmsMessage
-import android.util.Log
-import android.widget.Toast
-import android.content.ContentResolver
 import java.io.ByteArrayOutputStream
-import java.io.IOException
 import java.io.InputStream
+import java.lang.Exception
+import com.hstech.messenger.models.Message
+import com.hstech.messenger.models.MessageContent
+import com.hstech.messenger.models.MessageTypes
 
-class OfflineChat: Chat() {
+class OfflineChat : Chat() {
+
     companion object
     {
-        fun receiveSms(context: Context?, intent: Intent?)
-        {
-            val dataBundle = intent?.extras
-            dataBundle?.let {
-                val pdus = dataBundle.get("pdus") as Array<*>
-                if (pdus.isNotEmpty()) {
-                    val messages = arrayOfNulls<SmsMessage>(pdus.size)
-                    val sb = StringBuilder()
-                    for (i in pdus.indices) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            val format = dataBundle.getString("format")
-                            messages[i] = SmsMessage.createFromPdu(pdus[i] as ByteArray, format)
-                        }
-                        else
-                            messages[i] = SmsMessage.createFromPdu(pdus[i] as ByteArray)
-                        sb.append(messages[i]?.messageBody)
-                    }
-                    val sender = messages[0]?.originatingAddress
-                    val message = sb.toString()
-                    Toast.makeText(context, "$message----$sender" , Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
         private lateinit var contentObserver: ContentObserver
-        fun receiveMms(context: Context?, intent: Intent?)
+        private val mmsPartUri: Uri = Uri.parse("content://mms/part")
+        private val mmsUri: Uri = Uri.parse("content://mms")
+        private val contentResolver = AppUtils.context.contentResolver
+
+        fun receiveSms(intent: Intent?)
         {
-            val mmsUri = Uri.parse("content://mms/")
-            var repeatCount = 0
-            val cr = context?.contentResolver
+            ReceiveSMSAsync().execute(intent)
+        }
+
+        fun receiveMms() {
+
             val looper = Looper.myLooper()
+
             looper?.let {
+
                 val handler = Handler(looper)
                 contentObserver = object : ContentObserver(handler)
                 {
-                    override fun onChange(selfChange: Boolean) {
-                        repeatCount++
-                        if (repeatCount == 2)
-                        {
-                            val cursor = context?.contentResolver
-                                ?.query(mmsUri, null, "msg_box = 1", null, "_id")
-                            if (cursor != null && cursor.count > 0)
-                            {
-                                cursor.moveToLast()
-                                val subject = cursor.getString(cursor.getColumnIndex("sub"))
-                                val id = cursor.getString(cursor.getColumnIndex("_id"))
-                                val imgData: ByteArray? = null
-                                val message = ""
-                                val address = ""
-                                val fileName = ""
-                                val fileType = ""
-                                val direction = ""
-
-                                val mmsPartUri = Uri.parse("content://mms/part")
-                                val mmsPartCursor = context.contentResolver.query(mmsPartUri, null, "mid = $id", null, "_id")
-                                if (mmsPartCursor != null && mmsPartCursor.count > 0)
-                                {
-                                    mmsPartCursor.moveToLast()
-                                    do
-                                    {
-                                        val contentType = mmsPartCursor.getString(mmsPartCursor.getColumnIndex("ct"))
-                                        val partId = mmsPartCursor.getString(mmsPartCursor.getColumnIndex("_id"))
-                                        Log.i("AAA", contentType)
-
-                                    } while (mmsPartCursor.moveToPrevious())
-
-                                    mmsPartCursor.close()
-                                }
-                                cursor.close()
-                            }
-                            cr?.unregisterContentObserver(contentObserver)
-                        }
+                    override fun onChange(selfChange: Boolean)
+                    {
+                        ReceiveMMSAsync().execute()
                     }
                 }
-                cr?.registerContentObserver(mmsUri, true, contentObserver)
+                contentResolver.registerContentObserver(Uri.parse("content://mms/_id"), true, contentObserver)
             }
         }
 
-        private fun readMMSPart(context: Context? ,partId: String): ByteArray? {
-            val partData: ByteArray?
+        class ReceiveSMSAsync : AsyncTask<Intent, Void, Message>()
+        {
+            override fun onPostExecute(result: Message?) {
+                //Received message object here.
+            }
+
+            override fun doInBackground(vararg p0: Intent?): Message? {
+
+                val dataBundle = p0[0]?.extras
+
+                dataBundle?.let {
+
+                    val pdus = it.get("pdus") as Array<*>
+                    if (pdus.isNotEmpty()) {
+                        val messages = arrayOfNulls<SmsMessage>(pdus.size)
+                        val sb = StringBuilder()
+                        for (i in pdus.indices)
+                        {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                            {
+                                val format = it.getString("format")
+                                messages[i] = SmsMessage.createFromPdu(pdus[i] as ByteArray, format)
+                            }
+                            else
+                                messages[i] = SmsMessage.createFromPdu(pdus[i] as ByteArray)
+
+                            sb.append(messages[i]?.messageBody)
+                        }
+
+                        val message = Message()
+                        message.messageContent = null
+                        message.time = System.currentTimeMillis()
+                        message.sender = messages[0]?.originatingAddress
+                        message.messageText = sb.toString()
+
+                        return message
+                    }
+                }
+                return null
+            }
+        }
+
+        class ReceiveMMSAsync : AsyncTask<Void, Void, Message>()
+        {
+            override fun onPostExecute(result: Message?)
+            {
+                //Received message object here.
+            }
+
+            override fun doInBackground(vararg p0: Void?): Message
+            {
+                val cursor =
+                    contentResolver.query(mmsUri, null, "msg_box = 1", null, "_id")
+                val message = Message()
+
+                if (cursor != null && cursor.count > 0)
+                {
+                    cursor.moveToLast()
+                    val id = cursor.getString(cursor.getColumnIndex("_id"))
+                    val mmsPartCursor =
+                        contentResolver.query(mmsPartUri, null, "mid = $id", null, "_id")
+                    if (mmsPartCursor != null && mmsPartCursor.count > 0)
+                    {
+                        message.sender = getMMSSender(id)
+                        message.time = System.currentTimeMillis()
+                        mmsPartCursor.moveToLast()
+
+                        do
+                        {
+                            val contentType = mmsPartCursor.getString(mmsPartCursor.getColumnIndex("ct"))
+                            val partId = mmsPartCursor.getString(mmsPartCursor.getColumnIndex("_id"))
+
+                            if (contentType.equals("text/plain", ignoreCase = true))
+                            {
+                                message.messageText = readMMSText(id, partId)
+                            }
+
+                            else if (!contentType.equals("application/smil", ignoreCase = true))
+                            {
+                                val data = readMMSPart(partId)
+
+                                if (data != null)
+                                {
+                                    val type: String = when
+                                    {
+                                        contentType.equals("text/x-vCard", ignoreCase = true) ->
+                                        {
+                                            MessageTypes.CONTACT_TYPE
+                                        }
+                                        contentType.contains("image/", ignoreCase = true) ->
+                                        {
+                                            if (contentType.equals("image/gif", ignoreCase = true))
+                                            {
+                                                MessageTypes.GIF_IMAGE_TYPE
+                                            }
+                                            else
+                                            {
+                                                MessageTypes.SIMPLE_IMAGE_TYPE
+                                            }
+                                        }
+                                        contentType.contains("audio/", ignoreCase = true) ->
+                                        {
+                                            MessageTypes.AUDIO_TYPE
+                                        }
+                                        contentType.contains("video/", ignoreCase = true) ->
+                                        {
+                                            MessageTypes.VIDEO_TYPE
+                                        }
+                                        else ->
+                                        {
+                                            MessageTypes.FILE_TYPE
+                                        }
+                                    }
+                                    message.messageContent?.add(MessageContent(data, type))
+                                }
+                            }
+
+                        } while (mmsPartCursor.moveToPrevious())
+
+                        mmsPartCursor.close()
+                    }
+                    cursor.close()
+                }
+                contentResolver.unregisterContentObserver(contentObserver)
+                return message
+            }
+        }
+
+        private fun getMMSSender(mmsId: String): String?
+        {
+            val uriAddrPart = Uri.parse("content://mms/$mmsId/addr")
+            val addrCur = AppUtils.context.contentResolver
+                .query(uriAddrPart, null, "type=151", null, "_id")
+
+            return if (addrCur != null && addrCur.count > 0)
+            {
+                addrCur.moveToLast()
+                val address = addrCur.getString(addrCur.getColumnIndex("address"))
+                addrCur.close()
+                address
+            }
+            else null
+        }
+
+        private fun readMMSText(mmsId: String, partId: String): String?
+        {
+            var msg: String? = null
+            val curPart1 = AppUtils.context.contentResolver
+                .query(
+                    mmsPartUri, null, "mid = " + mmsId +
+                            " and _id =" + partId, null, "_id"
+                )
+            if (curPart1 != null)
+            {
+                curPart1.moveToLast()
+                msg = curPart1.getString(curPart1.getColumnIndex("text"))
+                curPart1.close()
+            }
+            return msg
+        }
+
+        private fun readMMSPart(partId: String): ByteArray?
+        {
+            var partData: ByteArray? = null
             val partURI = Uri.parse("content://mms/part/$partId")
             val baos = ByteArrayOutputStream()
             var inputStream: InputStream? = null
             try
             {
-                val mContentResolver = context?.contentResolver
-                inputStream = mContentResolver?.openInputStream(partURI)
+                val mContentResolver = AppUtils.context.contentResolver
+                inputStream = mContentResolver.openInputStream(partURI)
                 inputStream?.let {
                     val buffer = ByteArray(256)
                     var len = inputStream.read(buffer)
-                    while (len >= 0) {
+                    while (len >= 0)
+                    {
                         baos.write(buffer, 0, len)
                         len = inputStream.read(buffer)
                     }
                 }
                 partData = baos.toByteArray()
+            }
+            catch (e: Exception)
+            {
+                e.printStackTrace()
             }
             finally
             {

@@ -8,7 +8,8 @@ class ContactList {
 
     companion object {
 
-        fun getContactsList(c: Context) {
+        fun getContactsList(c: Context)
+        {
             val projection = arrayOf(
                 ContactsContract.Data.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.NUMBER,
@@ -20,17 +21,19 @@ class ContactList {
             )
             var lastPhoneName = ""
             phones?.let {
-                if (it.count > 0) {
-                    while (it.moveToNext()) {
+                if (it.count > 0)
+                {
+                    while (it.moveToNext())
+                    {
                         val name = it.getString(0)
                         val phoneNumber = it.getString(1)
                         val photoUri = it.getString(2)
-                        if (!name.equals(lastPhoneName, ignoreCase = true)) {
+                        if (!name.equals(lastPhoneName, ignoreCase = true))
+                        {
                             lastPhoneName = name
                             Log.d(
                                 "getContactsList",
-                                "$name---$phoneNumber---$photoUri"
-                            )
+                                "$name---$phoneNumber---$photoUri")
                         }
                     }
                 }
