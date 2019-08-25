@@ -1,10 +1,10 @@
-package com.hs.messenger.functionalities
+package com.hstech.messenger.functionalities
 
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import com.hs.messenger.listeners.ConnectionNotifier
+import com.hstech.messenger.listeners.ConnectionNotifier
 
 class AppUtils : Application()
 {

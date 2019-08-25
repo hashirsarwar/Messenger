@@ -1,9 +1,10 @@
-package com.hs.messenger.activities
+package com.hstech.messenger.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.hs.messenger.R
-import com.hs.messenger.functionalities.PermissionUtils
+import android.view.View
+import com.hstech.messenger.R
+import com.hstech.messenger.functionalities.PermissionUtils
 
 class StartActivity : AppCompatActivity()
 {

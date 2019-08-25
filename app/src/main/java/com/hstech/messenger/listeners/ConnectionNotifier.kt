@@ -1,4 +1,4 @@
-package com.hs.messenger.listeners
+package com.hstech.messenger.listeners
 
 import android.app.Service
 import android.content.Intent

@@ -1,4 +1,4 @@
-package com.hs.messenger.functionalities
+package com.hstech.messenger.functionalities
 
 class Settings {
 }

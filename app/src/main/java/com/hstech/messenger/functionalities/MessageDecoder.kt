@@ -1,4 +1,4 @@
-package com.hs.messenger.functionalities
+package com.hstech.messenger.functionalities
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
