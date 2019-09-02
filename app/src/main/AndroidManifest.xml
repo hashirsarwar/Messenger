@@ -14,6 +14,11 @@
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.provider.Telephony.SMS_RECEIVED" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <application
         android:name=".functionalities.AppUtils"
@@ -54,46 +59,47 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- <receiver -->
-        <!-- android:name=".listeners.OldSMSListener" -->
-        <!-- android:enabled="true" -->
-        <!-- android:exported="true" -->
-        <!-- android:permission="android.permission.BROADCAST_SMS"> -->
-        <!-- <intent-filter android:priority="3"> -->
-        <!-- <action android:name="android.provider.Telephony.SMS_RECEIVED" /> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
+         <receiver
+         android:name=".listeners.OldSMSListener"
+         android:enabled="true"
+         android:exported="true"
+         android:permission="android.permission.BROADCAST_SMS">
+         <intent-filter android:priority="3">
+         <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+         </intent-filter>
+         </receiver>
          <receiver
          android:name=".listeners.SMSListener"
          android:enabled="true"
          android:exported="true"
          android:permission="android.permission.BROADCAST_SMS">
          <intent-filter android:priority="3">
-         <action android:name="android.provider.Telephony.SMS_RECEIVED" /> <!--TODO: change to DELIVER-->
+         <action android:name="android.provider.Telephony.SMS_DELIVER" /> <!--TODO: change to DELIVER-->
          </intent-filter>
          </receiver>
          <receiver
          android:name=".listeners.MMSListener"
          android:permission="android.permission.BROADCAST_WAP_PUSH">
          <intent-filter>
-         <action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED" /> <!--TODO: change to DELIVER-->
+         <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" /> <!--TODO: change to DELIVER-->
          <data android:mimeType="application/vnd.wap.mms-message" />
          </intent-filter>
          </receiver>
-        <!-- <service -->
-        <!-- android:name=".HeadlessSmsSendService" -->
-        <!-- android:exported="true" -->
-        <!-- android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" /> -->
-        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
-        <!-- <data android:scheme="sms" /> -->
-        <!-- <data android:scheme="smsto" /> -->
-        <!-- <data android:scheme="mms" /> -->
-        <!-- <data android:scheme="mmsto" /> -->
-        <!-- </intent-filter> -->
-        <!-- </service> -->
+         <service
+         android:name=".HeadlessSmsSendService"
+         android:exported="true"
+         android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
+         <intent-filter>
+         <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
+         <category android:name="android.intent.category.DEFAULT" />
+         <data android:scheme="sms" />
+         <data android:scheme="smsto" />
+         <data android:scheme="mms" />
+         <data android:scheme="mmsto" />
+         </intent-filter>
+         </service>
         <service android:name=".listeners.ConnectionNotifier" />
+        <service android:name="com.android.mms.transaction.TransactionService" />
     </application>
 
 </manifest>

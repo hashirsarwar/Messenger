@@ -28,4 +28,5 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.0.2'
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'
     implementation 'com.google.firebase:firebase-database:19.0.0'
+    implementation 'com.klinkerapps:android-smsmms:5.1.4'
 }

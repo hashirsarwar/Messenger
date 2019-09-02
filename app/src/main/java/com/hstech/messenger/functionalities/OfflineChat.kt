@@ -2,18 +2,25 @@ package com.hstech.messenger.functionalities
 
 import android.content.Intent
 import android.database.ContentObserver
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.telephony.SmsMessage
+import android.util.Log
+import com.google.android.mms.APN
+import com.hstech.messenger.R
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.lang.Exception
-import com.hstech.messenger.models.Message
+import com.hstech.messenger.models.MessageObject
 import com.hstech.messenger.models.MessageContent
 import com.hstech.messenger.models.MessageTypes
+import com.klinker.android.send_message.Message
+import com.klinker.android.send_message.Settings
+import com.klinker.android.send_message.Transaction
 
 class OfflineChat : Chat() {
 
@@ -47,13 +54,27 @@ class OfflineChat : Chat() {
             }
         }
 
-        class ReceiveSMSAsync : AsyncTask<Intent, Void, Message>()
+        fun sendMessage(apn: APN)
         {
-            override fun onPostExecute(result: Message?) {
+            val settings = Settings()
+            Log.i("AAA", apn.MMSCenterUrl)
+            settings.mmsc = apn.MMSCenterUrl
+            settings.port = apn.MMSPort
+            settings.proxy = apn.MMSProxy
+
+            val sendTransaction = Transaction(AppUtils.context, settings)
+            val msg = Message("Hello from the other side", "+923106026180")
+            msg.addImage(BitmapFactory.decodeResource(AppUtils.context.resources, R.drawable.ic_launcher_background))
+            sendTransaction.sendNewMessage(msg, Transaction.NO_THREAD_ID)
+        }
+
+        class ReceiveSMSAsync : AsyncTask<Intent, Void, MessageObject>()
+        {
+            override fun onPostExecute(result: MessageObject?) {
                 //Received message object here.
             }
 
-            override fun doInBackground(vararg p0: Intent?): Message? {
+            override fun doInBackground(vararg p0: Intent?): MessageObject? {
 
                 val dataBundle = p0[0]?.extras
 
@@ -76,7 +97,7 @@ class OfflineChat : Chat() {
                             sb.append(messages[i]?.messageBody)
                         }
 
-                        val message = Message()
+                        val message = MessageObject(false)
                         message.messageContent = null
                         message.time = System.currentTimeMillis()
                         message.sender = messages[0]?.originatingAddress
@@ -89,18 +110,19 @@ class OfflineChat : Chat() {
             }
         }
 
-        class ReceiveMMSAsync : AsyncTask<Void, Void, Message>()
+        class ReceiveMMSAsync : AsyncTask<Void, Void, MessageObject>()
         {
-            override fun onPostExecute(result: Message?)
+            override fun onPostExecute(result: MessageObject?)
             {
+                Log.i("AAA", "MMS received!")
                 //Received message object here.
             }
 
-            override fun doInBackground(vararg p0: Void?): Message
+            override fun doInBackground(vararg p0: Void?): MessageObject
             {
                 val cursor =
                     contentResolver.query(mmsUri, null, "msg_box = 1", null, "_id")
-                val message = Message()
+                val message = MessageObject(false)
 
                 if (cursor != null && cursor.count > 0)
                 {

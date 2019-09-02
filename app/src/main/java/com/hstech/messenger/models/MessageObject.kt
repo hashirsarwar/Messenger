@@ -1,6 +1,6 @@
 package com.hstech.messenger.models
 
-class Message
+class MessageObject(val isOnline: Boolean)
 {
     var sender: String? = null
     var time: Long? = null

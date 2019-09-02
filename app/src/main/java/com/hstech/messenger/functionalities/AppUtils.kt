@@ -24,6 +24,6 @@ class AppUtils : Application()
         context = applicationContext
 
         //BELOW IS THE CODE EXECUTED ON THE START OF THE APPLICATION
-        startConnectionNotifier()
+        //startConnectionNotifier()
     }
 }
