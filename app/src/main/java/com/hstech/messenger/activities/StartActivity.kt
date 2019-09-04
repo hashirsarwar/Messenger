@@ -14,10 +14,7 @@ class StartActivity : AppCompatActivity()
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
-
-        PermissionUtils.askPermission(this, Manifest.permission.READ_SMS, 666)
-        PermissionUtils.askPermission(this, Manifest.permission.READ_CONTACTS, 666)
-        PermissionUtils.makeDefaultApp(this)
+        PermissionUtils.askPermission(this, Manifest.permission.READ_PHONE_STATE, 888)
     }
 
     fun sendIt(view: View)
